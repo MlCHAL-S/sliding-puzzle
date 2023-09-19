@@ -2,7 +2,7 @@ extends Control
 
 export var size = 4
 export var tile_size = 80
-export var tile_scene: PackedScene
+#export var tile_scene: PackedScene
 export var slide_duration = 0.15
 
 var board = []
@@ -10,6 +10,7 @@ var tiles = []
 var empty = Vector2()
 var is_animating = false
 var tiles_animating = 0
+var max_size = size*size
 
 var move_count = 0
 var number_visible = true
@@ -26,6 +27,7 @@ signal game_started
 signal game_won
 signal moves_updated
 
+# generates the board
 func gen_board():
 	var value = 1
 	board = []
@@ -33,15 +35,15 @@ func gen_board():
 		board.append([])
 		for c in range(size):
 
-			# choose which is empty cell
-			if (value == size*size):
+			# fills it with numbers
+			if (value == max_size):
 				board[r].append(0)
 				empty = Vector2(c, r)
 			else:
 				board[r].append(value)
 
 				# generate a new tile
-				var tile = tile_scene.instance()
+				var tile = load("res://assets/scenes/Tile.tscn").instance()
 				tile.set_position(Vector2(c * tile_size, r * tile_size))
 				tile.set_text(value)
 				if background_texture:
@@ -55,18 +57,23 @@ func gen_board():
 
 			value += 1
 
+
+# checks if won
 func is_board_solved():
 	var count = 1
 	for r in range(size):
 		for c in range(size):
 			if (board[r][c] != count):
-				if r == c and c == size - 1 and board[r][c] == 0:
+				# 
+				if r == c   and board[r][c] == 0:
 					return true
 				else:
 					return false
 			count += 1
 	return true
 
+
+# prints the board in a formated way
 func print_board():
 	print('------board------')
 	for r in range(size):
@@ -75,6 +82,8 @@ func print_board():
 			row += str(board[r][c]).pad_zeros(2) + ' '
 		print(row)
 
+
+# return the column and row of the the same number as value on the tile
 func value_to_grid(value):
 	for r in range(size):
 		for c in range(size):
@@ -82,18 +91,24 @@ func value_to_grid(value):
 				return Vector2(c, r)
 	return null
 
+
+# returns the tile object with the same value as in the tale
 func get_tile_by_value(value):
 	for tile in tiles:
 		if str(tile.number) == str(value):
 			return tile
 	return null
 
-# testing
+
+#################################################################################
 func _ready():
 	tile_size = floor(get_size().x / size)
 	set_size(Vector2(tile_size*size, tile_size*size))
 	gen_board()
+#################################################################################
 
+
+#
 func _on_Tile_pressed(number):
 	if is_animating:
 		return
@@ -113,15 +128,18 @@ func _on_Tile_pressed(number):
 		return
 
 
+	# we're getting the pressed tile position
 	var tile = value_to_grid(number)
 	empty = value_to_grid(0)
 
-	# if not clicked in row or column of the empty tile then return
+	# return if we clicked in the column of row where no tile is empty
 	if (tile.x != empty.x and tile.y != empty.y):
 		return
 
+	# vector with the direction in which a tile will be moved
 	var dir = Vector2(sign(tile.x - empty.x), sign(tile.y - empty.y))
 
+	# starting and ending positions of the tile which will be moved
 	var start = Vector2(min(tile.x, empty.x), min(tile.y, empty.y))
 	var end = Vector2(max(tile.x, empty.x), max(tile.y, empty.y))
 
@@ -135,7 +153,7 @@ func _on_Tile_pressed(number):
 			is_animating = true
 			tiles_animating += 1
 
-	# store current board state to calculat the moves made
+	# store current board state to calculate the moves made
 	var old_board = board.duplicate(true)
 
 	# clicked in same row as as empty
@@ -175,6 +193,7 @@ func _on_Tile_pressed(number):
 		game_state = GAME_STATES.WON
 		emit_signal("game_won")
 
+#
 func is_board_solvable(flat):
 	var parity = 0
 	var grid_width = size
@@ -200,6 +219,7 @@ func is_board_solvable(flat):
 	else:
 		return parity % 2 == 0
 
+#
 func scramble_board():
 	reset_board()
 
@@ -225,7 +245,7 @@ func scramble_board():
 				set_tile_position(r, c, board[r][c])
 	empty = value_to_grid(0)
 
-
+#
 func reset_board():
 	reset_move_count()
 	board = []
@@ -239,10 +259,12 @@ func reset_board():
 				set_tile_position(r, c, board[r][c])
 	empty = value_to_grid(0)
 
+#
 func set_tile_position(r: int, c: int, val: int):
 	var object: TextureButton = get_tile_by_value(val)
 	object.set_position(Vector2(c, r) * tile_size)
 
+#
 func _process(_delta):
 	var is_pressed = true
 	var dir = Vector2.ZERO
@@ -267,6 +289,7 @@ func _process(_delta):
 		print(tile_pressed)
 		_on_Tile_pressed(tile_pressed)
 
+#
 func slide_row(row, dir, limiter):
 	var empty_index = row.find(0)
 	if dir == 1:
@@ -288,6 +311,8 @@ func slide_row(row, dir, limiter):
 		end.pop_front()
 		return pre + post + [0] + end
 
+
+#
 func slide_column(col, dir, limiter):
 	var empty_index = col.find(0)
 
@@ -311,6 +336,7 @@ func slide_column(col, dir, limiter):
 		var end = col.slice(limiter, col.size() - 1)
 		end.pop_front()
 		return pre + post + [0] + end
+
 
 func _on_Tile_slide_completed(_number):
 	tiles_animating -= 1

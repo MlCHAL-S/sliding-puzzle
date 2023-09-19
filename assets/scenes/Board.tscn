@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=2 format=2]
 
 [ext_resource path="res://assets/scripts/Board.gd" type="Script" id=1]
-[ext_resource path="res://assets/scenes/Tile.tscn" type="PackedScene" id=2]
 
 [node name="Board" type="Control"]
 margin_right = 336.0
@@ -10,4 +9,3 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-tile_scene = ExtResource( 2 )
