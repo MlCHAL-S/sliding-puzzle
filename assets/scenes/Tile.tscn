@@ -1,7 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://assets/scripts/Tile.gd" type="Script" id=1]
-[ext_resource path="res://file.jpg" type="Texture" id=2]
+[ext_resource path="res://assets/themes/custom_theme.tres" type="Theme" id=1]
+[ext_resource path="res://assets/scripts/tile.gd" type="Script" id=2]
+[ext_resource path="res://assets/fonts/roboto_r_20.tres" type="DynamicFont" id=3]
+[ext_resource path="res://file.jpg" type="Texture" id=4]
 
 [sub_resource type="StyleBoxFlat" id=1]
 draw_center = false
@@ -9,29 +11,29 @@ border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color( 0.227451, 0.145098, 0.145098, 0.623529 )
+border_color = Color( 0, 0, 0, 1 )
 border_blend = true
 
 [node name="Tile" type="TextureButton"]
 margin_right = 64.0
 margin_bottom = 64.0
-script = ExtResource( 1 )
+theme = ExtResource( 1 )
+script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Sprite" type="Sprite" parent="."]
-scale = Vector2( 0.344, 0.344 )
-texture = ExtResource( 2 )
+scale = Vector2( 0.344086, 0.344086 )
+texture = ExtResource( 4 )
 centered = false
 vframes = 4
 hframes = 4
-frame = 1
 
 [node name="Number" type="Control" parent="."]
 margin_right = 64.0
 margin_bottom = 64.0
-mouse_filter = 2
+mouse_filter = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -40,7 +42,7 @@ __meta__ = {
 margin_right = 64.0
 margin_bottom = 64.0
 mouse_filter = 2
-color = Color( 0.113725, 0.101961, 0.101961, 0.47451 )
+color = Color( 0.05, 0.05, 0.05, 0.294118 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -48,6 +50,8 @@ __meta__ = {
 [node name="Label" type="Label" parent="Number"]
 margin_right = 64.0
 margin_bottom = 64.0
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "1"
 align = 1
 valign = 1

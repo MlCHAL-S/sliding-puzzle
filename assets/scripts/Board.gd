@@ -1,6 +1,5 @@
 extends Control
 
-# board variables
 export var size = 4
 export var tile_size = 80
 export var tile_scene: PackedScene
@@ -27,8 +26,6 @@ signal game_started
 signal game_won
 signal moves_updated
 
-
-# generates the board and instanciates the tiles
 func gen_board():
 	var value = 1
 	board = []
@@ -58,8 +55,6 @@ func gen_board():
 
 			value += 1
 
-
-# self explanatory
 func is_board_solved():
 	var count = 1
 	for r in range(size):
@@ -72,8 +67,6 @@ func is_board_solved():
 			count += 1
 	return true
 
-
-# to debug
 func print_board():
 	print('------board------')
 	for r in range(size):
@@ -82,8 +75,6 @@ func print_board():
 			row += str(board[r][c]).pad_zeros(2) + ' '
 		print(row)
 
-
-# returns the tile's position
 func value_to_grid(value):
 	for r in range(size):
 		for c in range(size):
@@ -91,23 +82,18 @@ func value_to_grid(value):
 				return Vector2(c, r)
 	return null
 
-
-# returns a specific tile based on it's number
 func get_tile_by_value(value):
 	for tile in tiles:
 		if str(tile.number) == str(value):
 			return tile
 	return null
 
-
-# calculates the board size
+# testing
 func _ready():
-	self.tile_size = floor(get_size().x / size)
-	self.set_size(Vector2(tile_size*size, tile_size*size))
-	self.gen_board()
+	tile_size = floor(get_size().x / size)
+	set_size(Vector2(tile_size*size, tile_size*size))
+	gen_board()
 
-
-# to do
 func _on_Tile_pressed(number):
 	if is_animating:
 		return
@@ -188,9 +174,7 @@ func _on_Tile_pressed(number):
 	if is_solved:
 		game_state = GAME_STATES.WON
 		emit_signal("game_won")
-		
-		
-# wikipedia
+
 func is_board_solvable(flat):
 	var parity = 0
 	var grid_width = size
@@ -215,9 +199,7 @@ func is_board_solvable(flat):
 			return parity % 2 != 0
 	else:
 		return parity % 2 == 0
-		
-		
-# 1d to 2d to do
+
 func scramble_board():
 	reset_board()
 
@@ -229,29 +211,26 @@ func scramble_board():
 	# keep shuffling until it is solvable
 	randomize()
 	temp_flat_board.shuffle()
-	
-	# shuffle until a solved one is returned
-	while not is_board_solvable(temp_flat_board):
+
+	var is_solvable = is_board_solvable(temp_flat_board)
+	while not is_solvable:
 		randomize()
 		temp_flat_board.shuffle()
-		
+		is_solvable = is_board_solvable(temp_flat_board)
 	# convert flat 1d board to 2d board
 	for r in range(size):
 		for c in range(size):
 			board[r][c] = temp_flat_board[r*size + c]
 			if board[r][c] != 0:
 				set_tile_position(r, c, board[r][c])
-
 	empty = value_to_grid(0)
-		
-		
-		
+
+
 func reset_board():
 	reset_move_count()
 	board = []
 	for r in range(size):
-		# board.append(([]))
-		board.append([])
+		board.append(([]))
 		for c in range(size):
 			board[r].append(r*size + c + 1)
 			if r*size + c + 1 == size * size:
@@ -259,27 +238,22 @@ func reset_board():
 			else:
 				set_tile_position(r, c, board[r][c])
 	empty = value_to_grid(0)
-		
-		
 
 func set_tile_position(r: int, c: int, val: int):
 	var object: TextureButton = get_tile_by_value(val)
 	object.set_position(Vector2(c, r) * tile_size)
 
-
-# why does my mouse starts the game
-func _input(_event):
+func _process(_delta):
 	var is_pressed = true
 	var dir = Vector2.ZERO
-	
-	if Input.is_key_pressed(KEY_LEFT):
-		dir.x = 1
-	elif Input.is_key_pressed(KEY_RIGHT):
+	if (Input.is_action_just_pressed("move_left")):
 		dir.x = -1
-	elif Input.is_key_pressed(KEY_UP):
-		dir.y = 1
-	elif Input.is_key_pressed(KEY_DOWN):
+	elif (Input.is_action_just_pressed("move_right")):
+		dir.x = 1
+	elif (Input.is_action_just_pressed("move_up")):
 		dir.y = -1
+	elif (Input.is_action_just_pressed("move_down")):
+		dir.y = 1
 	else:
 		is_pressed = false
 	if is_pressed:
@@ -369,3 +343,4 @@ func update_background_texture(texture):
 	for tile in tiles:
 		tile.set_sprite_texture(texture)
 		tile.update_size(size, tile_size)
+
