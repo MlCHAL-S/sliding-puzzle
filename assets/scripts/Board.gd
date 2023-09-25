@@ -7,6 +7,7 @@ export var slide_duration = 0.15
 
 var board = []
 var tiles = []
+var list = []
 var empty = Vector2()
 var is_animating = false
 var tiles_animating = 0
@@ -67,14 +68,6 @@ func is_board_solved():
 			count += 1
 	return true
 
-func print_board():
-	print('------board------')
-	for r in range(size):
-		var row = ''
-		for c in range(size):
-			row += str(board[r][c]).pad_zeros(2) + ' '
-		print(row)
-
 func value_to_grid(value):
 	for r in range(size):
 		for c in range(size):
@@ -117,7 +110,11 @@ func _on_Tile_pressed(number):
 	empty = value_to_grid(0)
 
 	# if not clicked in row or column of the empty tile then return
-	if (tile.x != empty.x and tile.y != empty.y):
+#	if (tile.x != empty.x and tile.y != empty.y):
+#		return
+	
+	list = [empty + Vector2(1,0), empty + Vector2(0,1), empty + Vector2(-1,0), empty + Vector2(0,-1)]
+	if not tile in list:
 		return
 
 	var dir = Vector2(sign(tile.x - empty.x), sign(tile.y - empty.y))
@@ -212,11 +209,11 @@ func scramble_board():
 	randomize()
 	temp_flat_board.shuffle()
 
-	var is_solvable = is_board_solvable(temp_flat_board)
-	while not is_solvable:
+	
+	while not is_board_solvable(temp_flat_board):
 		randomize()
 		temp_flat_board.shuffle()
-		is_solvable = is_board_solvable(temp_flat_board)
+		
 	# convert flat 1d board to 2d board
 	for r in range(size):
 		for c in range(size):
@@ -224,7 +221,6 @@ func scramble_board():
 			if board[r][c] != 0:
 				set_tile_position(r, c, board[r][c])
 	empty = value_to_grid(0)
-
 
 func reset_board():
 	reset_move_count()
@@ -243,7 +239,7 @@ func set_tile_position(r: int, c: int, val: int):
 	var object: TextureButton = get_tile_by_value(val)
 	object.set_position(Vector2(c, r) * tile_size)
 
-func _process(_delta):
+func _input(event):
 	var is_pressed = true
 	var dir = Vector2.ZERO
 	if (Input.is_action_just_pressed("move_left")):

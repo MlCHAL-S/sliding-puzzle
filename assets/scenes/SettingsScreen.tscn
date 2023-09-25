@@ -184,9 +184,9 @@ window_title = "Open a File"
 mode = 0
 access = 2
 filters = PoolStringArray( "*.png", "*.jpeg", "*.jpg", "*.bmp", "*webp" )
-current_dir = "/Users/hehe/Desktop/sliding-puzzle"
+current_dir = "/Users/hehe/Desktop/sliding-puzzle-v3.0"
 current_file = "deku.jpg"
-current_path = "/Users/hehe/Desktop/sliding-puzzle/deku.jpg"
+current_path = "/Users/hehe/Desktop/sliding-puzzle-v3.0/deku.jpg"
 
 [node name="PopupMessage" parent="M" instance=ExtResource( 4 )]
 [connection signal="toggled" from="M/V/ShowNumbers" to="." method="_on_ShowNumbers_toggled"]
