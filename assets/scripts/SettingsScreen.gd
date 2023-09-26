@@ -9,6 +9,8 @@ onready var size_value = $M/V/M/G/SizeValue
 onready var file_dialog = $M/FileDialog
 onready var message_popup = $M/PopupMessage
 
+var current_size = 4
+
 func _on_SizeSlider_value_changed(value):
 	size_value.text = str(value)
 	emit_signal("board_size_update", value)
@@ -40,3 +42,19 @@ func _on_FileDialog_file_selected(path):
 	texture.create_from_image(image, 0)
 	message_popup.popup()
 	emit_signal("background_update", texture)
+
+
+
+func _on_DecreaseButton_pressed():
+	if current_size > 2:
+		current_size -= 1
+	size_value.text = str(current_size)
+	emit_signal("board_size_update", current_size)
+
+
+func _on_IncreaseButton_pressed():
+	if current_size < 7:
+		current_size += 1
+	size_value.text = str(current_size)
+	emit_signal("board_size_update", current_size)
+
