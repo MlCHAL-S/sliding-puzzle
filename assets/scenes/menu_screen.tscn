@@ -26,7 +26,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 0.839 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 280, 0 ), Vector2( 0, 0 ) ]
+"values": [ Vector2( 0, -100 ), Vector2( 0, 100 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("Button:rect_position")
@@ -35,10 +35,10 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.639, 1.079 ),
+"times": PoolRealArray( 0.01, 0.639, 1.079 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
-"values": [ Vector2( 96, 440 ), Vector2( 96, 440 ), Vector2( 96, 240 ) ]
+"values": [ Vector2( 100, 700 ), Vector2( 100, 440 ), Vector2( 100, 500 ) ]
 }
 
 [node name="MenuScreen" type="Control"]
@@ -61,8 +61,8 @@ __meta__ = {
 [node name="Label" type="Label" parent="."]
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_left = 280.0
-margin_right = 280.0
+margin_top = 100.0
+margin_bottom = 99.9996
 custom_fonts/font = ExtResource( 1 )
 text = "Slide Puzzle"
 align = 1
@@ -75,10 +75,10 @@ __meta__ = {
 anchor_top = 0.397
 anchor_right = 1.0
 anchor_bottom = 0.604
-margin_left = 96.0
-margin_top = 277.23
-margin_right = -96.0
-margin_bottom = 244.199
+margin_left = 100.0
+margin_top = 182.4
+margin_right = -92.0
+margin_bottom = 149.369
 custom_styles/hover = SubResource( 2 )
 text = "Play"
 __meta__ = {
