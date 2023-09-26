@@ -16,7 +16,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Slide Puzzle"
-run/main_scene="res://assets/scenes/menu_screen.tscn"
+run/main_scene="res://assets/scenes/game_scene.tscn"
 config/icon="res://icon.png"
 
 [display]

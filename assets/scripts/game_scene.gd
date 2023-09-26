@@ -8,8 +8,8 @@ var current_epoch
 onready var board = $MarginContainer/VBoxContainer/GameView/Board
 onready var overlay = $MarginContainer/VBoxContainer/GameView/StartOverlay
 onready var overlay_text = $MarginContainer/VBoxContainer/GameView/StartOverlay/TextOverlay
-onready var move_value = $MarginContainer/VBoxContainer/StatsView/HBoxContainer/Moves/MoveValue
-onready var timer_value = $MarginContainer/VBoxContainer/StatsView/HBoxContainer/Time/TimeValue
+onready var move_value = $MarginContainer/VBoxContainer/Moves/MoveValue
+onready var timer_value = $MarginContainer/VBoxContainer/Time/TimeValue
 
 onready var anim_player = $AnimationPlayer
 
