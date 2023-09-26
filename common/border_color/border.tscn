@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://common/border_color/border.tres" type="Material" id=1]
+
+[node name="border" type="Control"]
+material = ExtResource( 1 )
+mouse_filter = 2
+
+[node name="top_stripe" type="ColorRect" parent="."]
+material = ExtResource( 1 )
+anchor_right = 1.0
+grow_vertical = 0
+rect_min_size = Vector2( 0, 1000 )
+mouse_filter = 2
+
+[node name="bot_stripe" type="ColorRect" parent="."]
+material = ExtResource( 1 )
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 0, 1000 )
+mouse_filter = 2

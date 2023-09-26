@@ -14,7 +14,10 @@ onready var timer_value = $MarginContainer/VBoxContainer/Time/TimeValue
 onready var anim_player = $AnimationPlayer
 
 func _ready():
+#	rect_position = -rect_size / 2
 	overlay.visible = true
+	$MarginContainer/VBoxContainer/Restart.connect("button_pressed", self, "on_restart_pressed")
+	$MarginContainer/VBoxContainer/Options.connect("button_pressed", self, "on_options_pressed")
 
 func _process(_delta):
 	if is_started:
@@ -39,7 +42,7 @@ func _on_Board_game_won():
 	game_won = true
 
 
-func _on_RestartButton_pressed():
+func on_restart_pressed():
 	if not is_started:
 		return
 	board.reset_move_count()
@@ -64,7 +67,7 @@ func _on_SettingsScreen_show_numbers_update(state):
 	board.set_tile_numbers(state)
 
 
-func _on_SettingsButton_pressed():
+func on_options_pressed():
 	anim_player.play("show_settings")
 
 

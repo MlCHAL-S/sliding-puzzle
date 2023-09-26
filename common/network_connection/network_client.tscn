@@ -1,0 +1,103 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+const MAX_BUFFER_SIZE = 1024
+
+var allowedCommands = [\"pause\", \"unpause\"]
+
+var port = 10222
+var address = \"127.0.0.1\" 
+
+var client : StreamPeerTCP = null
+
+var buffer = PoolByteArray()
+
+func _ready():
+	InitClient()
+
+
+func InitClient():
+	client = StreamPeerTCP.new()
+	var error = client.connect_to_host(address, port)
+	if error == OK:
+		client.set_no_delay(true)
+		print(\"Client successfully connected\")
+	else:
+		print(\"Error connecting to server \", error)
+
+
+func _process(delta):
+	if ClientIsConnected():
+		if client.get_available_bytes() > 0:
+			var data = client.get_data(client.get_available_bytes())
+			if data[0] == OK:
+				buffer.append_array(data[1])
+				
+				var has_zero = false
+				var zero_idx = -1
+				for i in range(buffer.size()):
+					has_zero = has_zero or buffer[i] == 0
+					if has_zero:
+						zero_idx = i
+						break
+				while has_zero:
+					var command = buffer.subarray(0, zero_idx).get_string_from_ascii()
+					
+					if command.length() > 0:
+						ProcessCommand(command)
+					
+					for i in range(zero_idx + 1):
+						buffer.remove(0)
+					
+					has_zero = false
+					for i in range(buffer.size()):
+						has_zero = has_zero or buffer[i] == 0
+						if has_zero:
+							zero_idx = i
+							break
+				
+				if buffer.size() > MAX_BUFFER_SIZE:
+					print(\"NetworkClient buffer full!\")
+					print(buffer.get_string_from_ascii())
+					buffer = PoolByteArray()
+			else:
+				print(\"Error receiving data; code: \", data[0])
+
+
+func SendCommand(f : String):
+	if(ClientIsConnected()):
+		print(\"Client sends \", f)
+		var data : PoolByteArray = f.to_ascii()
+		data.append(0)
+		client.put_data(data)
+
+
+func ClientIsConnected():
+	return client != null and client.is_connected_to_host()
+
+
+func SendImpulse():
+	SendCommand(\"impulse\")
+
+
+func ProcessCommand(p):
+	if(allowedCommands.has(p) and has_method(p)):
+		call(p)
+
+
+func pause():
+#	print(\"Client set pause\")
+	if(get_tree().get_current_scene().has_method(\"setPause\")):
+		get_tree().get_current_scene().setPause(true, \"Menu\", true)
+
+
+func unpause():
+	if(get_tree().get_current_scene().has_method(\"setPause\")):
+		get_tree().get_current_scene().setPause(false, \"Menu\", false)
+"
+
+[node name="NetworkClient" type="Node"]
+pause_mode = 2
+script = SubResource( 1 )

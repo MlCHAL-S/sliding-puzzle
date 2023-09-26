@@ -12,7 +12,7 @@ bg_color = Color( 0.2, 0.231373, 0.309804, 1 )
 
 [sub_resource type="StyleBoxEmpty" id=3]
 
-[sub_resource type="StyleBoxEmpty" id=5]
+[sub_resource type="StyleBoxEmpty" id=4]
 
 [node name="SettingsScreen" type="MarginContainer"]
 anchor_right = 1.0
@@ -150,7 +150,7 @@ text = ">"
 margin_top = 447.0
 margin_right = 1272.0
 margin_bottom = 477.0
-custom_styles/separator = SubResource( 5 )
+custom_styles/separator = SubResource( 4 )
 custom_constants/separation = 30
 
 [node name="FileButton" type="Button" parent="M/V"]
@@ -165,7 +165,7 @@ text = "Choose Background Image"
 margin_top = 505.0
 margin_right = 1272.0
 margin_bottom = 535.0
-custom_styles/separator = SubResource( 5 )
+custom_styles/separator = SubResource( 4 )
 custom_constants/separation = 30
 
 [node name="BackButton" type="Button" parent="M/V"]
@@ -182,7 +182,7 @@ margin_top = 575.0
 margin_right = 1272.0
 margin_bottom = 780.0
 size_flags_vertical = 3
-custom_styles/separator = SubResource( 5 )
+custom_styles/separator = SubResource( 4 )
 
 [node name="FileDialog" type="FileDialog" parent="M"]
 margin_left = 4.0

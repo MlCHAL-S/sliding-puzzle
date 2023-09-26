@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+
+script/source = "extends Node2D
+
+func _ready():
+	if common.options[\"show_game_version\"]==true:
+		get_node(\"Label\").set_text(common.game_version())
+		show()"
+
+[node name="GameVersion" type="Node2D"]
+pause_mode = 2
+visible = false
+z_index = 4001
+script = SubResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Label" type="Label" parent="."]
+margin_right = 40.0
+margin_bottom = 14.0
+mouse_filter = 1
+size_flags_vertical = 0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
+custom_constants/shadow_as_outline = 1
+text = "GameVersion: 0 (unset)"
+

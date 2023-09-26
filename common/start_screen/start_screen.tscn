@@ -1,0 +1,223 @@
+[gd_scene load_steps=28 format=2]
+
+[ext_resource path="res://common/start_screen/start_screen.gd" type="Script" id=1]
+[ext_resource path="res://common/common_bg/common_bg.tscn" type="PackedScene" id=2]
+[ext_resource path="res://common/start_screen/funtronic.png" type="Texture" id=3]
+[ext_resource path="res://common/start_screen/pilot_maly.png" type="Texture" id=4]
+[ext_resource path="res://common/start_screen/RemoteFlag.gd" type="Script" id=5]
+[ext_resource path="res://common/start_screen/RobotoCondensed-Bold.ttf" type="DynamicFontData" id=6]
+[ext_resource path="res://common/start_screen/DejaVuSansCondensed-Bold.ttf" type="DynamicFontData" id=7]
+[ext_resource path="res://common/start_screen/start_button.gd" type="Script" id=8]
+[ext_resource path="res://common/start_screen/start_glow.png" type="Texture" id=9]
+[ext_resource path="res://common/start_screen/start_button_glow.gd" type="Script" id=10]
+[ext_resource path="res://common/start_screen/start.png" type="Texture" id=11]
+[ext_resource path="res://common/start_screen/start_button_animation.gd" type="Script" id=12]
+[ext_resource path="res://common/start_screen/tutorial_button.gd" type="Script" id=13]
+[ext_resource path="res://common/start_screen/tutorial.png" type="Texture" id=14]
+[ext_resource path="res://common/start_screen/tutorial_button_animation.gd" type="Script" id=15]
+[ext_resource path="res://common/start_screen/back_button.gd" type="Script" id=16]
+[ext_resource path="res://common/start_screen/back.png" type="Texture" id=17]
+[ext_resource path="res://common/start_screen/game_title.gd" type="Script" id=18]
+[ext_resource path="res://common/start_screen/tutorial_video.gd" type="Script" id=19]
+
+[sub_resource type="Animation" id=1]
+resource_name = "Pulse"
+length = 3.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 1.2, 1.2 ), Vector2( 1, 1 ) ]
+}
+
+[sub_resource type="DynamicFont" id=2]
+size = 43
+font_data = ExtResource( 7 )
+fallback/0 = ExtResource( 6 )
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 28.2133, 10 )
+
+[sub_resource type="RectangleShape2D" id=4]
+
+[sub_resource type="RectangleShape2D" id=5]
+
+[sub_resource type="DynamicFont" id=6]
+size = 86
+font_data = ExtResource( 7 )
+fallback/0 = ExtResource( 6 )
+
+[sub_resource type="DynamicFont" id=7]
+size = 86
+font_data = ExtResource( 6 )
+
+[sub_resource type="ShaderMaterial" id=8]
+
+[node name="StartScreen" type="Node2D"]
+pause_mode = 2
+z_index = 4000
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CommonBackground" parent="." instance=ExtResource( 2 )]
+
+[node name="CompanyLogo" type="Sprite" parent="."]
+position = Vector2( 698.629, 40.3622 )
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="RemoteFlag" type="Sprite" parent="."]
+position = Vector2( 400, 550 )
+texture = ExtResource( 4 )
+script = ExtResource( 5 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="RemoteFlag"]
+autoplay = "Pulse"
+playback_process_mode = 0
+anims/Pulse = SubResource( 1 )
+
+[node name="PartnerLogo" type="Sprite" parent="."]
+position = Vector2( 100, 40 )
+
+[node name="Bundle" type="Node2D" parent="."]
+editor/display_folded = true
+position = Vector2( 400, 98 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="BundleLogo" type="Sprite" parent="Bundle"]
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="BundleLabel" type="Label" parent="Bundle"]
+margin_left = -400.0
+margin_top = -27.0
+margin_right = 400.0
+margin_bottom = 21.0
+mouse_filter = 1
+size_flags_vertical = 0
+custom_fonts/font = SubResource( 2 )
+align = 1
+valign = 1
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="GameCategoryIcon" type="Sprite" parent="."]
+position = Vector2( 400, 203 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="StartButton" type="Area2D" parent="."]
+position = Vector2( 400, 386.89 )
+script = ExtResource( 8 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Glow" type="Sprite" parent="StartButton"]
+texture = ExtResource( 9 )
+script = ExtResource( 10 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Start" type="Sprite" parent="StartButton"]
+texture = ExtResource( 11 )
+script = ExtResource( 12 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StartButton"]
+position = Vector2( 0, -1.2893 )
+scale = Vector2( 4.3594, 4.7516 )
+shape = SubResource( 3 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="TutorialButton" type="Area2D" parent="."]
+position = Vector2( 747.118, 550.584 )
+script = ExtResource( 13 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Tutorial" type="Sprite" parent="TutorialButton"]
+texture = ExtResource( 14 )
+vframes = 2
+hframes = 18
+frame = 35
+script = ExtResource( 15 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TutorialButton"]
+scale = Vector2( 3.23322, 3.23322 )
+shape = SubResource( 4 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="BackButton" type="Area2D" parent="."]
+position = Vector2( 59.83, 552.235 )
+script = ExtResource( 16 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Back" type="Sprite" parent="BackButton"]
+texture = ExtResource( 17 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BackButton"]
+position = Vector2( 3.75454, -5.29425 )
+scale = Vector2( 3.56926, 3.45082 )
+shape = SubResource( 5 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="GameTitle" type="Node2D" parent="."]
+position = Vector2( 400, 210 )
+script = ExtResource( 18 )
+__meta__ = {
+"_edit_lock_": true
+}
+font = SubResource( 6 )
+font_ovr = SubResource( 7 )
+letter_material = SubResource( 8 )
+
+[node name="TutorialVideo" type="Node2D" parent="."]
+script = ExtResource( 19 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="VideoPlayer" type="VideoPlayer" parent="TutorialVideo"]
+margin_right = 800.0
+margin_bottom = 600.0
+__meta__ = {
+"_edit_lock_": true
+}
+[connection signal="input_event" from="StartButton" to="StartButton" method="_on_StartButton_input_event"]
+[connection signal="input_event" from="TutorialButton" to="TutorialButton" method="_on_TutorialButton_input_event"]
+[connection signal="input_event" from="BackButton" to="BackButton" method="_on_BackButton_input_event"]

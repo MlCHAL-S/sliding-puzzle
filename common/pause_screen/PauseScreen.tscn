@@ -1,0 +1,137 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://common/start_screen/RobotoCondensed-Bold.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://common/pause_screen/pause.png" type="Texture" id=2]
+[ext_resource path="res://common/pause_screen/pauza-ramka.png" type="Texture" id=3]
+[ext_resource path="res://common/pause_screen/pauza-ikona.png" type="Texture" id=4]
+[ext_resource path="res://common/pause_screen/pauza-ikona+ramka.png" type="Texture" id=5]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+# default pause version is 0, means Pause0
+# when set to non-0 - PauseX will show
+# Inside PauseX there are two kinds of nodes:
+# rotatable (name begins with \"Rot_\"
+# or static, unrotatable (name does not begin with \"Rot_\")
+# At the beginning of game, in _ready, user should enter:
+# set_game orientation(\"left\"|\"right\"|\"bottom\"|\"top\") if not default bottom
+# Some games need another Pause look, so we havbe to set:
+# set_pause_version(1) or even higher, when implemented.
+
+func rotate_inside(a=0):
+	for t in get_children():
+		for c in t.get_children():
+			if c.name.left(4)==\"Rot_\":
+				c.set_rotation_degrees(common.get_game_rotation())
+	scale=common.get_fixed_scale().rotated(common.get_game_rotation()*PI/180).abs()
+
+func _ready():
+	scale=common.get_fixed_scale().rotated(common.get_game_rotation()*PI/180).abs()
+	position=common.npos(Vector2(0.5,0.5))
+	set_pause_version(2)
+	hide()
+
+func set_pause_version(num):
+	for c in get_children():
+		if c.has_method(\"set_visible\"):
+			c.set_visible(c.name==(\"Pause\"+str(num)))
+
+"
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0, 0, 0, 0.603922 )
+
+[sub_resource type="StyleBoxFlat" id=3]
+content_margin_left = 100.0
+content_margin_right = 100.0
+content_margin_top = 100.0
+content_margin_bottom = 100.0
+bg_color = Color( 0, 0, 0, 0.501961 )
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="DynamicFont" id=4]
+size = 100
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 1 )
+
+[sub_resource type="Animation" id=5]
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[node name="PauseScreen" type="Sprite"]
+pause_mode = 2
+z_index = 4096
+script = SubResource( 1 )
+
+[node name="Pause0" type="Node2D" parent="."]
+editor/display_folded = true
+
+[node name="Rot_Screen" type="Panel" parent="Pause0"]
+editor/display_folded = true
+margin_left = -640.0
+margin_top = -640.0
+margin_right = 640.0
+margin_bottom = 640.0
+rect_pivot_offset = Vector2( 640, 640 )
+custom_styles/panel = SubResource( 2 )
+
+[node name="Label" type="Label" parent="Pause0/Rot_Screen"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -149.5
+margin_top = -159.0
+margin_right = 149.5
+margin_bottom = 159.0
+grow_horizontal = 2
+grow_vertical = 2
+custom_styles/normal = SubResource( 3 )
+custom_fonts/font = SubResource( 4 )
+align = 3
+valign = 3
+
+[node name="Sprite" type="Sprite" parent="Pause0/Rot_Screen"]
+position = Vector2( 640, 640 )
+scale = Vector2( 0.4, 0.4 )
+texture = ExtResource( 2 )
+
+[node name="Pause1" type="Node2D" parent="."]
+editor/display_folded = true
+
+[node name="ramka" type="Sprite" parent="Pause1"]
+scale = Vector2( 0.67, 0.67 )
+texture = ExtResource( 3 )
+
+[node name="Rot_ikona" type="Sprite" parent="Pause1"]
+scale = Vector2( 0.67, 0.67 )
+texture = ExtResource( 4 )
+
+[node name="Pause2" type="Node2D" parent="."]
+
+[node name="ramka_ikona" type="TextureRect" parent="Pause2"]
+margin_left = -640.0
+margin_top = -406.0
+margin_right = 1250.0
+margin_bottom = 776.0
+rect_scale = Vector2( 0.68, 0.68 )
+mouse_filter = 0
+texture = ExtResource( 5 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Appear = SubResource( 5 )

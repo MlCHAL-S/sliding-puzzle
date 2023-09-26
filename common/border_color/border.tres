@@ -1,0 +1,75 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=2]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+
+uniform vec2 resolution = vec2(1280.0, 800.0); // base resolution the screen is at
+uniform float zoom = 1.0; // do not change manually, has to be in sync with common
+uniform float margin = 0.5; // increase if there is a black rim
+uniform float mip_margin = 0.5; // increase if blurred portion gets dark even with high border_power
+uniform float max_mip_level = 5.0; // increase for more blurriness, 0.0-10.0
+uniform float border_depth_factor = 0.5; // decrease to make more stretchy border, increase to make it tighter
+uniform float border_depth_power = 1.0; // decrease to make border achieve border_depth_factor faster
+uniform float border_power = 3.0; // increase to make border fade to black more slowly
+uniform float mip_power = 1.5; // increase to make border blur more slowly
+
+
+void fragment() {
+	vec2 screen_res = vec2(1.0, 1.0) / SCREEN_PIXEL_SIZE;
+	vec2 scaled_screen_res = screen_res * zoom;
+	vec2 screen_pos = (screen_res - scaled_screen_res) / 2.0;
+	vec2 scaled_resolution = resolution * min(scaled_screen_res.x / resolution.x, scaled_screen_res.y / resolution.y) - 2.0 * vec2(margin);
+	vec2 border_width = (scaled_screen_res - scaled_resolution) / 2.0;
+	vec2 coordinate = SCREEN_UV / SCREEN_PIXEL_SIZE;
+	vec2 botleft_coordinate = screen_pos + border_width;
+	vec2 topright_coordinate = botleft_coordinate + scaled_resolution;
+	if (coordinate.x >= botleft_coordinate.x && coordinate.y >= botleft_coordinate.y &&
+		coordinate.x <= topright_coordinate.x && coordinate.y <= topright_coordinate.y) {
+		discard;
+	} else {
+		float border_depth_x = 0.0;
+		float border_depth_y = 0.0;
+		//if (coordinate.x < botleft_coordinate.x) {
+		//	border_depth_x = max(border_depth_x, (botleft_coordinate.x - coordinate.x) / border_width.x);
+		//}
+		//if (coordinate.x > topright_coordinate.x) {
+		//	border_depth_x = max(border_depth_x, -(topright_coordinate.x - coordinate.x) / border_width.x);
+		//}
+		if (coordinate.y < botleft_coordinate.y) {
+			border_depth_y = max(border_depth_y, (botleft_coordinate.y - coordinate.y) / border_width.y);
+		}
+		if (coordinate.y > topright_coordinate.y) {
+			border_depth_y = max(border_depth_y, -(topright_coordinate.y - coordinate.y) / border_width.y);
+		}
+		float border_depth = max(border_depth_x, border_depth_y);
+		
+		float mip_level = pow(border_depth, mip_power) * max_mip_level;
+		vec2 mip_scaled_resolution = resolution / min(scaled_screen_res.x / resolution.x, scaled_screen_res.y / resolution.y) - 2.0 * vec2(max(margin, clamp(mip_level, 0.0, 1.0) * pow(2.0, mip_level + mip_margin)));
+		vec2 mip_border_width = (scaled_screen_res - mip_scaled_resolution) / 2.0;
+		vec2 mip_botleft_coordinate = screen_pos + mip_border_width;
+		vec2 mip_topright_coordinate = mip_botleft_coordinate + mip_scaled_resolution;
+	
+		vec2 middle = screen_res / 2.0;
+		vec2 from_middle = coordinate - middle;
+		vec2 sample_coordinate = coordinate;
+		sample_coordinate.y = clamp(sample_coordinate.y, botleft_coordinate.y + mix(1.0, border_depth_factor, pow(border_depth, border_depth_power))  * (botleft_coordinate.y - sample_coordinate.y), topright_coordinate.y + mix(1.0, border_depth_factor, pow(border_depth, border_depth_power)) * (topright_coordinate.y - sample_coordinate.y));
+		sample_coordinate.y = clamp(sample_coordinate.y, mip_botleft_coordinate.y, mip_topright_coordinate.y);
+		sample_coordinate /= screen_res;
+		COLOR.rgb = mix(textureLod(SCREEN_TEXTURE, sample_coordinate, mip_level).rgb, vec3(0.0, 0.0, 0.0), pow(border_depth, border_power));
+		//COLOR.rgb=vec3(0,sample_coordinate.y,0);
+
+	}
+}"
+
+[resource]
+shader = SubResource( 1 )
+shader_param/resolution = Vector2( 1280, 800 )
+shader_param/zoom = 1.0
+shader_param/margin = 0.5
+shader_param/mip_margin = 0.5
+shader_param/max_mip_level = 5.0
+shader_param/border_depth_factor = 0.5
+shader_param/border_depth_power = 1.0
+shader_param/border_power = 3.0
+shader_param/mip_power = 1.5
