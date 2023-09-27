@@ -162,9 +162,9 @@ custom_constants/separation = 30
 
 [node name="Button2" parent="M/V" instance=ExtResource( 4 )]
 margin_left = 611.0
-margin_top = 517.0
+margin_top = 518.0
 margin_right = 661.0
-margin_bottom = 567.0
+margin_bottom = 568.0
 rect_min_size = Vector2( 50, 50 )
 size_flags_horizontal = 4
 size_flags_vertical = 4

@@ -334,9 +334,4 @@ func update_size(new_size):
 	game_state = GAME_STATES.NOT_STARTED
 	reset_move_count()
 
-func update_background_texture(texture):
-	background_texture = texture
-	for tile in tiles:
-		tile.set_sprite_texture(texture)
-		tile.update_size(size, tile_size)
 
