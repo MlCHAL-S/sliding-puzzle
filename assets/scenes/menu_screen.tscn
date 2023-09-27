@@ -8,7 +8,7 @@
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.2, 0.231373, 0.309804, 1 )
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=2]
 length = 2.0
 step = 0.001
 tracks/0/type = "value"
@@ -62,4 +62,4 @@ margin_right = 1181.0
 margin_bottom = 760.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/menu_in = SubResource( 3 )
+anims/menu_in = SubResource( 2 )

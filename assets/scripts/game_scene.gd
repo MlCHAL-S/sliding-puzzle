@@ -14,7 +14,6 @@ onready var timer_value = $MarginContainer/VBoxContainer/Time/TimeValue
 onready var anim_player = $AnimationPlayer
 
 func _ready():
-#	rect_position = -rect_size / 2
 	overlay.visible = true
 	$MarginContainer/VBoxContainer/Restart.connect("button_pressed", self, "on_restart_pressed")
 	$MarginContainer/VBoxContainer/Options.connect("button_pressed", self, "on_options_pressed")
@@ -78,3 +77,4 @@ func _on_SettingsScreen_hide_settings():
 func _on_SettingsScreen_background_update(texture: ImageTexture):
 	print('updating background texture now')
 	board.update_background_texture(texture)
+	

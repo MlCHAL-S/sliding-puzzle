@@ -132,7 +132,7 @@ func _on_Tile_pressed(number):
 			is_animating = true
 			tiles_animating += 1
 
-	# store current board state to calculat the moves made
+	# store current board state to calculate the moves made
 	var old_board = board.duplicate(true)
 
 	# clicked in same row as as empty
