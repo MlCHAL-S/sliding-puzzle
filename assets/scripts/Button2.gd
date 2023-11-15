@@ -7,6 +7,7 @@ var button_time = 0
 var button_loading_time = 1
 var declining_speed = 3
 var is_timer_ready = true
+var is_button_active = false
 
 signal button_pressed
 

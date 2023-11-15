@@ -3,7 +3,7 @@
 [ext_resource path="res://assets/scripts/board.gd" type="Script" id=1]
 [ext_resource path="res://assets/scenes/tile.tscn" type="PackedScene" id=2]
 
-[node name="Board" type="Control"]
+[node name="board" type="Control"]
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false

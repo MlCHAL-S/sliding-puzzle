@@ -1,9 +1,13 @@
 extends TextureButton
 
 var number
-
 signal tile_pressed
 signal slide_completed
+
+func _ready():
+	var button = $Button2.connect("button_pressed", self, "_on_Tile_pressed")
+	$Button2/TextureProgress.fill_mode = 5
+	$Button2/Label.text = ""
 
 # Update the number of the tile
 func set_text(new_number):
@@ -45,6 +49,9 @@ func slide_to(new_position, duration):
 # Hide / Show the number of the tile
 func set_number_visible(state):
 	$Number.visible = state
+	
+func set_button_visible(state):
+	$Button2.visible = state
 
 # Tile is pressed
 func _on_Tile_pressed():

@@ -8,6 +8,7 @@ export var slide_duration = 0.15
 var board = []
 var tiles = []
 var list = []
+var possible_moves = []
 var empty = Vector2()
 var is_animating = false
 var tiles_animating = 0
@@ -49,6 +50,7 @@ func gen_board():
 					tile.set_sprite_texture(background_texture)
 				tile.set_sprite(value-1, size, tile_size)
 				tile.set_number_visible(number_visible)
+				tile.set_button_visible(false)
 				tile.connect("tile_pressed", self, "_on_Tile_pressed")
 				tile.connect("slide_completed", self, "_on_Tile_slide_completed")
 				add_child(tile)
@@ -68,6 +70,14 @@ func is_board_solved():
 			count += 1
 	return true
 
+func print_board():
+	print('------board------')
+	for r in range(size):
+		var row = ''
+		for c in range(size):
+			row += str(board[r][c]).pad_zeros(2) + ' '
+		print(row)
+
 func value_to_grid(value):
 	for r in range(size):
 		for c in range(size):
@@ -80,6 +90,15 @@ func get_tile_by_value(value):
 		if str(tile.number) == str(value):
 			return tile
 	return null
+
+func get_tile_by_pos(pos):
+	for r in range(size):
+		for c in range(size):
+			if c == pos.y and r == pos.x:
+				return board[c][r]
+
+	
+
 
 # testing
 func _ready():
@@ -108,14 +127,12 @@ func _on_Tile_pressed(number):
 
 	var tile = value_to_grid(number)
 	empty = value_to_grid(0)
-
-	# if not clicked in row or column of the empty tile then return
-#	if (tile.x != empty.x and tile.y != empty.y):
-#		return
-	
 	list = [empty + Vector2(1,0), empty + Vector2(0,1), empty + Vector2(-1,0), empty + Vector2(0,-1)]
-	if not tile in list:
+
+	if not tile in list and number != 0:
 		return
+
+		
 
 	var dir = Vector2(sign(tile.x - empty.x), sign(tile.y - empty.y))
 
@@ -156,6 +173,8 @@ func _on_Tile_pressed(number):
 		for r in range(size):
 			board[r][tile.x] = col[r]
 
+
+
 	# update moves
 	var moves_made = 0
 	for r in range(size):
@@ -163,7 +182,8 @@ func _on_Tile_pressed(number):
 			if old_board[r][c] != board[r][c]:
 				moves_made += 1
 
-	move_count += moves_made - 1
+	if number != 0:
+		move_count += moves_made - 1
 	emit_signal("moves_updated", move_count)
 
 	# check win
@@ -171,6 +191,17 @@ func _on_Tile_pressed(number):
 	if is_solved:
 		game_state = GAME_STATES.WON
 		emit_signal("game_won")
+		
+	list = [tile + Vector2(1,0), tile + Vector2(0,1), tile + Vector2(-1,0), tile + Vector2(0,-1)]
+		
+	for i in list:
+		possible_moves.append(get_tile_by_value(get_tile_by_pos(i)))
+		
+	print(possible_moves)
+	for x in possible_moves:
+		if x:
+			x.set_button_visible(true)
+	possible_moves.clear()
 
 func is_board_solvable(flat):
 	var parity = 0
@@ -242,13 +273,13 @@ func set_tile_position(r: int, c: int, val: int):
 func _input(event):
 	var is_pressed = true
 	var dir = Vector2.ZERO
-	if (Input.is_action_just_pressed("move_left")):
+	if Input.is_action_just_pressed("move_left"):
 		dir.x = -1
-	elif (Input.is_action_just_pressed("move_right")):
+	elif Input.is_action_just_pressed("move_right"):
 		dir.x = 1
-	elif (Input.is_action_just_pressed("move_up")):
+	elif Input.is_action_just_pressed("move_up"):
 		dir.y = -1
-	elif (Input.is_action_just_pressed("move_down")):
+	elif Input.is_action_just_pressed("move_down"):
 		dir.y = 1
 	else:
 		is_pressed = false
@@ -321,6 +352,11 @@ func set_tile_numbers(state):
 	number_visible = state
 	for tile in tiles:
 		tile.set_number_visible(state)
+		
+func set_tile_button_visible(state):
+	number_visible = state
+	for tile in tiles:
+		tile.set_button_visible(state)
 
 func update_size(new_size):
 	size = int(new_size)

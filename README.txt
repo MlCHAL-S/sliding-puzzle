@@ -4,3 +4,6 @@ Projects -> project settings:
 	Window -> Stretch: Mode -> 2d, Aspect -> Keep
 	Run -> Main scene: -> main.tscn
 	Add common in autoload section
+
+
+Dodanie git-hook
